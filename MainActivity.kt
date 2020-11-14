@@ -12,4 +12,6 @@ class MainActivity : AppCompatActivity() {
         ...
     }
     ...
+     ViewModelProviders.of(this).get(QuizViewModel::class.java)
+
 }
