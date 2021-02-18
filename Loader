@@ -1,0 +1,4 @@
+// developer.android.com/jetpack/androidx/releases/loader#declaring_dependencies
+dependencies {
+    implementation "androidx.loader:loader:1.1.0"
+}

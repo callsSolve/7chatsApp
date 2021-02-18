@@ -1,0 +1,9 @@
+class SomeFancyViewModel : ViewModel() {
+        ...
+        fun setCurrentIndex(index: Int) {
+            if (index != currentIndex) {
+                currentIndex = index
+                // Load current question from database
+            }
+        }
+    }

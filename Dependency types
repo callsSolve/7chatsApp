@@ -1,0 +1,26 @@
+// developer.android.com/studio/build/dependencies#dependency-types
+
+apply plugin: 'com.android.application'
+
+android { ... }
+
+dependencies {
+    // Dependency on a local library module
+    implementation project(":mylibrary")
+
+    // Dependency on local binaries
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Dependency on a remote binary
+    implementation 'com.example.android:app-magic:12.3'
+}
+implementation project(':mylibrary')
+
+implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+implementation files('libs/foo.jar', 'libs/bar.jar')
+
+implementation 'com.example.android:app-magic:12.3'
+
+implementation group: 'com.example.android', name: 'app-magic', version: '12.3'
+

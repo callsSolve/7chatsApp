@@ -1,0 +1,11 @@
+// developer.android.com/studio/build/dependencies#view-dependency-tree
+
+Dependency on LIB_A and LIB_B (in that order)
+And LIB_A depends on LIB_C and LIB_D (in that order)
+And LIB_B also depends on LIB_C
+Then, the flat dependency order will be as follows:
+
+LIB_A
+LIB_D
+LIB_B
+LIB_C
