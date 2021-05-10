@@ -1,0 +1,29 @@
+// developer.android.com/studio/build/dependencies#remote-repositories
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+allprojects {
+    repositories {
+        maven {
+            url "https://repo.example.com/maven2"
+        }
+        maven {
+            url "file://local/repo/"
+        }
+        ivy {
+            url "https://repo.example.com/ivy"
+        }
+    }
+}

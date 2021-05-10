@@ -1,0 +1,196 @@
+tasks:
+  - init: yarn && yarn build
+    command: yarn dev --host 0.0.0.0
+    tasks:
+- command: echo Terminal1
+- command: echo Terminal2
+tasks:
+  - command: npm run dev
+  tasks:
+  - init: npm install
+    command: npm run dev
+    tasks:
+  - before: ./setup.sh
+    init: npm install
+    command: npm run dev
+    
+    tasks:
+  - command: python3 -m http.server 8080
+    name: Static Server
+  - openMode: split-right
+    command: echo SplitTerminal
+  - openIn: left
+    command: echo LeftPanelTerminal
+    
+   
+   openIn
+   -----------------------------------------------------------------------------------------
+   |          openIn                          |        Where                               |
+   -------------------------------------------|---------------------------------------------
+   |          openIn: bottom                  |   the bottom panel (default)               |
+   -----------------------------------------------------------------------------------------
+   |          openIn: left                    |    the left panel                          |
+   -------------------------------------------|---------------------------------------------
+   |          openIn: right                   |    the right panel                         |
+   -----------------------------------------------------------------------------------------
+   |          openIn: main                    |     the main editor area                   |
+   -------------------------------------------|---------------------------------------------
+  
+   
+   openMode
+    --------------------------------------------------------------------------------------------------------
+   |          openMode                        |        Description                                          |
+   -------------------------------------------|--------------------------------------------------------------
+   |          openMode: tab-after             |   Opens in the same tab group right after the previous tab  |
+   ----------------------------------------------------------------------------------------------------------
+   |         openMode: tab-before             |    Opens in the same tab group left before the previous tab |
+   -------------------------------------------|--------------------------------------------------------------
+   |         openMode: split-right            |    Splits and adds the terminal to the right                |
+   ----------------------------------------------------------------------------------------------------------
+   |         openMode: split-left             |     the main editor area                                    |
+   -------------------------------------------|--------------------------------------------------------------
+   |        openMode: split-top               |       Splits and adds the terminal to the left              |
+   ----------------------------------------------------------------------------------------------------------
+   |        openMode: split-bottom            |       Splits and adds the terminal to the top               |
+   -------------------------------------------|--------------------------------------------------------------
+   |.      openMode: split-bottom	            |        Splits and adds the terminal to the bottom           |
+   -------------------------------------------|--------------------------------------------------------------
+   
+   
+   vscode:
+  extensions:
+    - scala-lang.scala@0.3.9:O5XmjwY5Gz+0oDZAmqneJw==
+    - scalameta.metals@1.9.0:KNju0fLBpNiyqH8qBfFeIQ==
+    
+   Exposing Ports  
+ports:
+  - port: 8080
+  
+  Port Ranges
+  ports:
+  - port: 3000-8999
+    onOpen: ignore
+    
+    gitpod.io/#prebuild/https://gitlab.com/gitpod/spring-petclinic
+
+Manual execution of prebuild
+Alternatively, it is also possible to manually trigger a new prebuild for any repository & commit by using the gitpod.io/#prebuild/ URL prefix:
+
+https://gitpod.io/#prebuild/https://github.com/ORG/REPO
+Configure prebuilds
+By default Gitpod prebuilds workspaces for all changes on the default branch (e.g. master) and for Pull/Merge Requests coming from the same repository.
+
+Note: prebuilds are executed as the user who enabled them. This means that if you want to use prebuilds on a private repository, you must to give Gitpod access to private repositories.
+
+There are three parts to configuring prebuilds:
+
+the tasks that will be run during a prebuild,
+when a prebuild should be triggered, and
+how you will be notified by the Gitpod GitHub app (GitHub only)
+All three parts are configured in your repository’s .gitpod.yml file.
+
+What init tasks should be executed during the prebuild is configured using start tasks. It is similar to non-prebuilt workspace starts, except that the command phase is not executed during the prebuild (because it can potentially run forever, e.g. if you start a server). There is also a prebuild phase that you can use to execute additional long-running tasks during prebuilds, e.g. unit tests.
+
+Configure the GitHub app
+Once you have installed the Gitpod GitHub app, you can configure its behavior in the github section of your repository’s .gitpod.yml.
+
+Note: The Gitpod GitHub app has no equivalent for GitLab or Bitbucket yet, so this entire section is GitHub-specific for now.
+
+See below for an example:
+
+github:
+  prebuilds:
+    # enable for the master/default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo (defaults to false)
+    branches: true
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: true
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: false
+    # add a label once the prebuild is ready to pull requests (defaults to false)
+    addLabel: false
+When a prebuild is run
+The prebuilds section in the .gitpod.yml file configures when prebuilds are run. By default prebuilds are run on push to master and for each pull request coming from the same repository. You can enable prebuilds also for all branches and for pull requests from forks.
+
+GitHub integration
+Once the GitHub app is installed Gitpod can add helpful annotations to your pull requests.
+
+Checks
+By default Gitpod registers itself as a check to pull requests - much like a continuous integration system would do. You can disable this behaviour in the .gitpod.yml file in your default/master branch:
+
+github:
+  prebuilds:
+    addCheck: false
+Comment
+Gitpod can add a comment with a “Review in Gitpod” button to your pull requests. The color of the button shows the state of the prebuild:
+
+Button color
+Prebuild state
+Review in Gitpod (prebuild building)	the prebuild is currently running. Opening a workspace now will show the log output of the prebuild. Once the prebuild is done, your workspace will open.
+Review in Gitpod (prebuild done)	the prebuild is done. A new workspace on this branch/PR will make use of this prebuild.
+Review in Gitpos (prebuild failed)	the prebuild failed or timed out. A new workspace on this branch/PR will open the prebuild and show you the log output.
+You can enable this behaviour in the .gitpod.yml file in your default/master branch:
+
+github:
+  prebuilds:
+    addComment: true
+Badge
+Instead of adding a comment, Gitpod can also modify the description of a pull request to add the “Review in Gitpod” button. This approach produces fewer GitHub notifications, but can also create a concurrent editing conflict when the bot and a user try to edit the description of a pull request at the same time.
+
+You can enable this behaviour in the .gitpod.yml file in your default/master branch:
+
+github:
+  prebuilds:
+    addBadge: true
+The addComment and addBadge behaviours are not mutually exclusive (i.e. enabling one does not disable the other). If you don’t want the comments to be added, disable them using addComment: false.
+
+Label
+Gitpod can also add a label to your pull requests once the prebuild is done. If someone pushes to the source branch of the PR, Gitpod will remove the label until the new prebuild is ready. This is handy if you only want to review PRs for which a prebuild exists, saving you the time waiting for stuff to build.
+
+You can enable this behaviour in the .gitpod.yml file in your default/master branch:
+
+github:
+  prebuilds:
+    addLabel: prebuilt-in-gitpod-or-any-other-label
+Note: This is very much a beta-feature and not necessarily reliable. If a label has been added to a PR, a prebuild exists. But sometimes a label may not be added even though the workspace was prebuilt.
+  
+  src/[repository-provider]/[repository-owner]/[repository-name]
+  ...
+checkoutLocation: "go/src/github.com/demo-apps/go-gin-app"
+workspaceLocation: "."
+tasks:
+  - command: |
+      cd /workspace/go/src/github.com/demo-apps/go-gin-app
+      go get -v ./...
+      go build -o app
+      ./app
+      
+      {
+  // Comment
+  "component.configuration": "value",
+  "[language]": {
+       "component.configuration": "value"
+  }
+}
+
+ {
+  // To show invisibles
+  "editor.renderWhitespace": "all",
+  // Enable wordWrap for markdown files
+  "[markdown]": {
+       "editor.wordWrap": "on"
+   }
+}
+  
+  
+  
+                                                
+                                               
+                                               

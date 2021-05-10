@@ -1,0 +1,12 @@
+// developer.android.com/studio/build/dependencies#wear_apps
+dependencies {
+    // If the main and Wear app modules have the same variants,
+    // variant-aware dependency management automatically matches
+    // variants of the main app module with that of the wear module.
+    wearApp project(':wearable')
+}
+dependencies {
+    paidWearApp project(':wear1')
+    demoWearApp project(':wear1')
+    freeWearApp project(':wear2')
+}

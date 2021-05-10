@@ -1,0 +1,9 @@
+private MyViewModel myViewModel;
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (getActivity() != null) {
+        myViewModel = (MyViewModel) obtainFragmentViewModel(getActivity(), MyViewModel.class);
+    }
+}

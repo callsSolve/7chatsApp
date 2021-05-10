@@ -1,0 +1,117 @@
+// developer.android.com/studio/build/dependencies#dependency_configurations
+dependencies {
+  // Executes lint checks from the ':checks' project
+  // at build time.
+  lintChecks project(':checks')
+  // Compiles lint checks from the ':checks-to-publish'
+  // into a lint.jar file and publishes it to your
+  // Android library.
+  lintPublish project(':checks-to-publish')
+}
+dependencies {
+    freeImplementation 'com.google.firebase:firebase-ads:9.8.0'
+}
+configurations {
+    // Initializes a placeholder for the freeDebugRuntimeOnly dependency
+    // configuration.
+    freeDebugRuntimeOnly {}
+}
+
+dependencies {
+    freeDebugRuntimeOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+dependencies {
+    // Adds a remote binary dependency only for local tests.
+    testImplementation 'junit:junit:4.12'
+
+    // Adds a remote binary dependency only for the instrumented test APK.
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+  // WARNING: Configuration 'androidTestApi' is obsolete and has been replaced with 'androidTestImplementation'.
+  // Error: Annotation processors must be explicitly declared now.
+  
+  dependencies {
+    // Adds libraries defining annotations to only the compile classpath.
+    compileOnly 'com.google.dagger:dagger:version-number'
+    // Adds the annotation processor dependency to the annotation processor classpath.
+    annotationProcessor 'com.google.dagger:dagger-compiler:version-number'
+}
+android {
+    ...
+    defaultConfig {
+        ...
+        javaCompileOptions {
+            annotationProcessorOptions {
+                argument "key1", "value1"
+                argument "key2", "value2"
+            }
+        }
+    }
+}
+class MyArgsProvider implements CommandLineArgumentProvider {
+
+    // Annotates each directory as either an input or output for the
+    // annotation processor.
+    @InputFiles
+    // Using this annotation helps Gradle determine which part of the file path
+    // should be considered during up-to-date checks.
+    @PathSensitive(PathSensitivity.RELATIVE)
+    FileCollection inputDir
+
+    @OutputDirectory
+    File outputDir
+
+    // The class constructor sets the paths for the input and output directories.
+    MyArgsProvider(FileCollection input, File output) {
+        inputDir = input
+        outputDir = output
+    }
+
+    // Specifies each directory as a command line argument for the processor.
+    // The Android plugin uses this method to pass the arguments to the
+    // annotation processor.
+    @Override
+    Iterable<String> asArguments() {
+        // Use the form '-Akey[=value]' to pass your options to the Java compiler.
+        ["-AinputDir=${inputDir.singleFile.absolutePath}",
+         "-AoutputDir=${outputDir.absolutePath}"]
+    }
+}
+
+android {...}
+
+// This is in your module's build.gradle file.
+android {
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // Creates a new MyArgsProvider object, specifies the input and
+                // output paths for the constructor, and passes the object
+                // to the Android plugin.
+                compilerArgumentProvider new MyArgsProvider(files("input/path"),
+                                         new File("output/path"))
+            }
+        }
+    }
+}
+
+android {
+    ...
+    defaultConfig {
+        ...
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+    }
+}
+dependencies {
+    implementation('some-library') {
+        exclude group: 'com.example.imgtools', module: 'native'
+    }
+}
+android.testVariants.all { variant ->
+    variant.getCompileConfiguration().exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
+    variant.getRuntimeConfiguration().exclude group: 'com.jakewharton.threetenabp', module: 'threetenabp'
+}
